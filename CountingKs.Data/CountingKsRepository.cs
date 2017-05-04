@@ -14,16 +14,17 @@ namespace CountingKs.Data
     public CountingKsRepository(CountingKsContext ctx)
     {
       _ctx = ctx;
+      _ctx.Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
     }
 
     public IQueryable<Food> GetAllFoods()
     {
-      return _ctx.Foods;
+        return _ctx.Foods;
     }
-
-    public IQueryable<Food> GetAllFoodsWithMeasures()
+        
+      public IQueryable<Food> GetAllFoodsWithMeasures()
     {
-      return _ctx.Foods.Include("Measures");
+        return _ctx.Foods.Include("Measures");
     }
 
     public IQueryable<Food> FindFoodsWithMeasures(string searchString)
