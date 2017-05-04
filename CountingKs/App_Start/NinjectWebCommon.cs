@@ -1,3 +1,5 @@
+using CountingKs.Data;
+
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(CountingKs.App_Start.NinjectWebCommon), "Start")]
 [assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(CountingKs.App_Start.NinjectWebCommon), "Stop")]
 
@@ -44,7 +46,9 @@ namespace CountingKs.App_Start
             {
                 kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
                 kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
+               
 
+       
                 RegisterServices(kernel);
                 return kernel;
             }
@@ -61,6 +65,8 @@ namespace CountingKs.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
+            kernel.Bind<ICountingKsRepository>().To<CountingKsRepository>();
+            kernel.Bind<CountingKsContext>().To<CountingKsContext>();
         }        
     }
 }
