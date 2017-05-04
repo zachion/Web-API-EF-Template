@@ -14,13 +14,13 @@ namespace CountingKs.Controllers
     {
         private ICountingKsIdentityService _identityService;
 
-        public DiariesController(ICountingKsRepository repo, 
-            ICountingKsIdentityService identityService) :base(repo)
+        public DiariesController(ICountingKsRepository repo,
+            ICountingKsIdentityService identityService) : base(repo)
         {
             _identityService = identityService;
         }
 
-        public IEnumerable<DiaryModel>Get()
+        public IEnumerable<DiaryModel> Get()
         {
             var username = _identityService.CurrentUser;
             var results = TheRepository
@@ -29,8 +29,9 @@ namespace CountingKs.Controllers
                 .Take(10)
                 .ToList()
                 .Select(d => TheModelFactory.Create(d));
-            
+
             return results;
         }
+
     }
 }
