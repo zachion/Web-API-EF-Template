@@ -39,7 +39,7 @@ namespace CountingKs.Models
         {
             return new DiaryModel()
             {
-                Url = _urlHelper.Link("Diaries", new { diaryid = diary.CurrentDate}),
+                Url = _urlHelper.Link("Diaries", new { diaryid = diary.CurrentDate.ToString("yyyy-MM-dd")}),
                 CurrentDate = diary.CurrentDate
             };
 

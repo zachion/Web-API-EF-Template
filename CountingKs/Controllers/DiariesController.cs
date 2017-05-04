@@ -31,7 +31,20 @@ namespace CountingKs.Controllers
                 .Select(d => TheModelFactory.Create(d));
 
             return results;
-        }
 
+        }
+        public HttpResponseMessage Get(DateTime diaryId)
+        {
+            var username = _identityService.CurrentUser;
+            var result = TheRepository.GetDiary(username, diaryId);
+
+            if (result == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.NotFound);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, 
+                TheModelFactory.Create(result));
+        }
     }
 }
