@@ -1,33 +1,51 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using CountingKs.Data;
 using CountingKs.Data.Entities;
+using CountingKs.Models;
 
 namespace CountingKs.Controllers
 {
-    public class FoodsController : ApiController
+    public class FoodsController : BaseApiController
     {
-        ICountingKsRepository _repo;
-
-        public FoodsController(ICountingKsRepository repo)
+       
+        public FoodsController(ICountingKsRepository repo) :base(repo)
         {
-            _repo = repo;
         }
 
-        public IEnumerable<Food> Get()
+        public IEnumerable<FoodModel> Get(bool includeMeasures = true)
         {
-            var repo = new CountingKsRepository(
-                new CountingKsContext());
+            IQueryable<Food> query;
 
-            var results = repo.GetAllFoods()
-                .OrderBy(f => f.Description)
-                .Take(25)
-                .ToList();
+            if (includeMeasures)
+            {
+                query = TheRepository.GetAllFoodsWithMeasures();
+            }
+            else
+            {
+                query = TheRepository.GetAllFoods();
+            }
+
+            var results = query
+                    .OrderBy(f => f.Description)
+                    .Take(25)
+                    .ToList()
+                    .Select(f => TheModelFactory.Create(f));
+
             return results;
+            
+        }
+
+        public FoodModel Get(int foodid)
+        {
+            return TheModelFactory.Create(TheRepository.GetFood(foodid));
         }
     }
 }
