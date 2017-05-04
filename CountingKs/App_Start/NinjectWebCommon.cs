@@ -72,7 +72,7 @@ namespace CountingKs.App_Start
         {
             kernel.Bind<ICountingKsRepository>().To<CountingKsRepository>();
             kernel.Bind<CountingKsContext>().To<CountingKsContext>();
-            kernel.Bind<ICountingKsIdentityService>().To<ICountingKsIdentityService>();
+            kernel.Bind<ICountingKsIdentityService>().To<CountingKsIdentityService>();
         }        
     }
 }
