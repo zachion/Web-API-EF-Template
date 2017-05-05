@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http.Routing;
+using CountingKs.Data;
 using CountingKs.Data.Entities;
 
 namespace CountingKs.Models
@@ -11,10 +12,12 @@ namespace CountingKs.Models
     public class ModelFactory
     {
         private UrlHelper _urlHelper;
+        private ICountingKsRepository _repo;
 
-        public ModelFactory(HttpRequestMessage request)
+        public ModelFactory(HttpRequestMessage request, ICountingKsRepository repo)
         {
             _urlHelper = new UrlHelper(request);
+            _repo = repo;
         }
         public FoodModel Create(Food food)
         {
@@ -29,7 +32,7 @@ namespace CountingKs.Models
         {
             return new MeasureModel()
             {
-                Url = _urlHelper.Link("Measure", new { foodid = measure.Food.Id ,id=measure.Id}),
+                Url = _urlHelper.Link("Measures", new { foodid = measure.Food.Id ,id=measure.Id}),
                 Description = measure.Description,
                 Calories = measure.Calories
             };
@@ -56,6 +59,32 @@ namespace CountingKs.Models
                 MeasureDescription = entry.Measure.Description,
                 MeasureUrl = _urlHelper.Link("Measures", new { foodid = entry.FoodItem.Id, id = entry.Measure.Id })
             };
+        }
+
+        public DiaryEntry Parse(DiaryEntryModel model)
+        {
+            try
+            {
+                var entry = new DiaryEntry();
+
+                if (model.Quantity != default(double))
+                {
+                    entry.Quantity = model.Quantity;
+                }
+
+                var uri = new Uri(model.MeasureUrl);
+                var measureId = int.Parse(uri.Segments.Last());
+                var measure = _repo.GetMeasure(measureId);
+
+                entry.Measure = measure;
+                entry.FoodItem = measure.Food;
+
+                return entry;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
     }
 }

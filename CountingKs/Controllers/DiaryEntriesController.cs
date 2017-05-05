@@ -13,7 +13,8 @@ namespace CountingKs.Controllers
     public class DiaryEntriesController : BaseApiController
     {
         private ICountingKsIdentityService _identityService;
-        public DiaryEntriesController(ICountingKsRepository repo, 
+
+        public DiaryEntriesController(ICountingKsRepository repo,
             ICountingKsIdentityService identityService) : base(repo)
         {
             _identityService = identityService;
@@ -39,16 +40,48 @@ namespace CountingKs.Controllers
             }
             else
             {
-                return Request.CreateResponse(HttpStatusCode.OK, 
+                return Request.CreateResponse(HttpStatusCode.OK,
                     TheModelFactory.Create(result));
             }
         }
 
-        public object Post(DateTime diaryId, DiaryEntryModel model)
+        public object Post(DateTime diaryId, [FromBody] DiaryEntryModel model)
         {
+            try
+            {
+                var entity = TheModelFactory.Parse(model);
+
+                if (entity == null) Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Could not read diary entry in body");
+
+                var diary = TheRepository.GetDiary(_identityService.CurrentUser, diaryId);
+
+                if (diary == null) Request.CreateResponse(HttpStatusCode.NotFound);
+
+
+                if (diary.Entries.Any(e => e.Measure.Id == entity.Measure.Id))
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Doublicate measure not allowed");
+                }
+                 
+                diary.Entries.Add(entity);
+                if (TheRepository.SaveAll())
+                {
+                    return Request.CreateResponse(HttpStatusCode.Created, TheModelFactory.Create(entity));
+                }
+                else
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Could not save to the database");
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
+            }
             return null;
         }
+    
 
 
-    }
+}
 }
