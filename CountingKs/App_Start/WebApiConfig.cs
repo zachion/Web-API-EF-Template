@@ -16,7 +16,7 @@ namespace CountingKs
                 new {controller = "foods", foodid = RouteParameter.Optional} 
             );
             config.Routes.MapHttpRoute(
-                "Measure",
+                "Measures",
                 "api/nutrition/foods/{foodid}/measure/{id}",
                 new {controller = "measures", id = RouteParameter.Optional}
             );

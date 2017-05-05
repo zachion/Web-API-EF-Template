@@ -46,7 +46,7 @@ namespace CountingKs.Controllers
 
         public object Post(DateTime diaryId, DiaryEntryModel model)
         {
-            
+            return null;
         }
 
 
