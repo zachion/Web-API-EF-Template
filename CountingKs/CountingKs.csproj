@@ -187,6 +187,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\DiariesController.cs" />
+    <Compile Include="Controllers\DiaryEntriesController.cs" />
     <Compile Include="Controllers\FoodsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MeasuresController.cs" />
@@ -196,6 +197,7 @@
     </Compile>
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\BaseApiController.cs" />
+    <Compile Include="Models\DiaryEntryModel.cs" />
     <Compile Include="Models\DiaryModel.cs" />
     <Compile Include="Models\FoodModel.cs" />
     <Compile Include="Models\MeasureModel.cs" />

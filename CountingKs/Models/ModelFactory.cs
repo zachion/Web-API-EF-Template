@@ -42,7 +42,18 @@ namespace CountingKs.Models
                 Url = _urlHelper.Link("Diaries", new { diaryid = diary.CurrentDate.ToString("yyyy-MM-dd")}),
                 CurrentDate = diary.CurrentDate
             };
+        }
 
+        public DiaryEntryModel Create(DiaryEntry entry)
+        {
+            return new DiaryEntryModel()
+            {
+                Url = _urlHelper.Link("DiaryEntries", new { diaryid = entry.Diary.CurrentDate.ToString("yyyy-MM-dd"), id = entry.Id }),
+                Quantity = entry.Quantity,
+                FoodDescription = entry.FoodItem.Description,
+                MeasureDescription = entry.Measure.Description,
+                MeasureUrl = _urlHelper.Link("Measures", new { foodid = entry.FoodItem.Id, id = entry.Measure.Id })
+            };
         }
     }
 }
