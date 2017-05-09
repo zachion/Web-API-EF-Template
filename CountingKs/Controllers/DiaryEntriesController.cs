@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Metadata.Edm;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -104,7 +105,34 @@ namespace CountingKs.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
             }   
         }
+        [HttpPut]
+        [HttpPatch]
+        public HttpResponseMessage Patch(DateTime diaryId, int id, [FromBody] DiaryEntryModel model)
+        {
+            try
+            {
+                var entity = TheRepository.GetDiaryEntry(_identityService.CurrentUser, diaryId, id);
+                if (entity == null) return Request.CreateResponse(HttpStatusCode.NotFound);
 
+                var parsedValue = TheModelFactory.Parse(model);
+                if (parsedValue == null) return Request.CreateResponse(HttpStatusCode.NotFound);
 
+                if (entity.Quantity != parsedValue.Quantity)
+                {
+                    entity.Quantity = parsedValue.Quantity;
+                    if (TheRepository.SaveAll())
+                    {
+                        return Request.CreateResponse(HttpStatusCode.OK);
+                    }
+                }
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
+
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
+                throw;
+            }
+        }
     }
 }
