@@ -189,6 +189,7 @@
     <Compile Include="Controllers\DiariesController.cs" />
     <Compile Include="Controllers\DiaryEntriesController.cs" />
     <Compile Include="Controllers\DiarySummaryController.cs" />
+    <Compile Include="Filters\RequireHttpsAttribute.cs" />
     <Compile Include="Models\DiarySummaryModel.cs" />
     <Compile Include="Controllers\FoodsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
