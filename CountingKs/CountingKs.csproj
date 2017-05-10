@@ -188,6 +188,8 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\DiariesController.cs" />
     <Compile Include="Controllers\DiaryEntriesController.cs" />
+    <Compile Include="Controllers\DiarySummaryController.cs" />
+    <Compile Include="Models\DiarySummaryModel.cs" />
     <Compile Include="Controllers\FoodsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MeasuresController.cs" />
