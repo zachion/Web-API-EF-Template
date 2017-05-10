@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net.Http.Formatting;
 using System.Web.Http;
+using CountingKs.Filters;
 using Newtonsoft.Json.Serialization;
 
 namespace CountingKs
@@ -45,6 +46,12 @@ namespace CountingKs
             var jsonFormater = config.Formatters.OfType<JsonMediaTypeFormatter>().FirstOrDefault();
             if (jsonFormater != null)
                 jsonFormater.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+
+//#if !DEBUG
+//            // Force HTTPS on antire API
+//            config.Filters.Add(new RequireHttpsAttribute());
+//#endif
+
         }
     }
 }
