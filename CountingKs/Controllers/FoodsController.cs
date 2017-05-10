@@ -1,18 +1,9 @@
 ﻿using System;
-using System.CodeDom.Compiler;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Diagnostics;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
 using System.Web.Http.Routing;
-using System.Web.UI;
 using CountingKs.Data;
 using CountingKs.Data.Entities;
 using CountingKs.Models;
-using Microsoft.Ajax.Utilities;
 
 namespace CountingKs.Controllers
 {
