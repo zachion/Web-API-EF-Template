@@ -92,7 +92,7 @@ namespace CountingKs.Data
 
     public AuthToken GetAuthToken(string token)
     {
-      return _ctx.AuthTokens.Include("ApiUser").Where(t => t.Token == token).FirstOrDefault();
+      return _ctx.AuthTokens.Include("ApiUser").FirstOrDefault(t => t.Token == token);
     }
 
     public bool SaveAll()
