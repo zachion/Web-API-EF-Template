@@ -15,21 +15,22 @@ namespace CountingKs.App_Start
 
     using Ninject;
     using Ninject.Web.Common;
+    using System.Web.Http.Filters;
 
-    public static class NinjectWebCommon 
+    public static class NinjectWebCommon
     {
         private static readonly Bootstrapper bootstrapper = new Bootstrapper();
 
         /// <summary>
         /// Starts the application
         /// </summary>
-        public static void Start() 
+        public static void Start()
         {
             DynamicModuleUtility.RegisterModule(typeof(OnePerRequestHttpModule));
             DynamicModuleUtility.RegisterModule(typeof(NinjectHttpModule));
             bootstrapper.Initialize(CreateKernel);
         }
-        
+
         /// <summary>
         /// Stops the application.
         /// </summary>
@@ -37,7 +38,7 @@ namespace CountingKs.App_Start
         {
             bootstrapper.ShutDown();
         }
-        
+
         /// <summary>
         /// Creates the kernel that will manage your application.
         /// </summary>
@@ -45,23 +46,18 @@ namespace CountingKs.App_Start
         private static IKernel CreateKernel()
         {
             var kernel = new StandardKernel();
-            try
-            {
-                kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
-                kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
-               
-                // Support WebAPI
-                GlobalConfiguration.Configuration.DependencyResolver = 
-                    new NinjectResolver(kernel);
-                
-                RegisterServices(kernel);
-                return kernel;
-            }
-            catch
-            {
-                kernel.Dispose();
-                throw;
-            }
+            kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
+            kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
+
+            // Support WebAPI
+            GlobalConfiguration.Configuration.DependencyResolver =
+                new NinjectResolver(kernel);
+            GlobalConfiguration.Configuration.Services.Add(typeof(IFilterProvider),
+                new NinjectWebApiFilterProvider(kernel));
+
+
+            RegisterServices(kernel);
+            return kernel;
         }
 
         /// <summary>
@@ -73,6 +69,6 @@ namespace CountingKs.App_Start
             kernel.Bind<ICountingKsRepository>().To<CountingKsRepository>();
             kernel.Bind<CountingKsContext>().To<CountingKsContext>();
             kernel.Bind<ICountingKsIdentityService>().To<CountingKsIdentityService>();
-        }        
+        }
     }
 }
