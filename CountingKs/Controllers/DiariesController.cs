@@ -10,6 +10,7 @@ using CountingKs.Services;
 
 namespace CountingKs.Controllers
 {
+    [CountingKsAuthorize]
     public class DiariesController : BaseApiController
     {
         private ICountingKsIdentityService _identityService;

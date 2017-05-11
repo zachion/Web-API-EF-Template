@@ -146,7 +146,7 @@ namespace CountingKs.Data
         var diary = new Diary()
         {
           CurrentDate = DateTime.Today,
-          UserName = "shawnwildermuth",
+          UserName = "harris",
         };
 
         foreach (var food in _ctx.Foods.Take(1000).ToList().OrderBy(m => Guid.NewGuid()).Take(15))

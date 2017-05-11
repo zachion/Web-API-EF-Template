@@ -20,7 +20,7 @@ namespace CountingKs.Filters
 
             if (req.RequestUri.Scheme != Uri.UriSchemeHttps)
             {
-                var html = "<p>http is required</p>";
+                var html = "<p>https is required</p>";
                 if (req.Method.Method == "GET")
                 {
                     actionContext.Response = req.CreateResponse(HttpStatusCode.Found);
