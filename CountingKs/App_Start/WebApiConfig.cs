@@ -4,6 +4,7 @@ using System.Net.Http.Formatting;
 using System.Web.Http;
 using CountingKs.Filters;
 using Newtonsoft.Json.Serialization;
+using WebApiContrib.Formatting.Jsonp;
 
 namespace CountingKs
 {
@@ -47,10 +48,15 @@ namespace CountingKs
             if (jsonFormater != null)
                 jsonFormater.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
 
-//#if !DEBUG
-//            // Force HTTPS on antire API
-//            config.Filters.Add(new RequireHttpsAttribute());
-//#endif
+            // Add support for JSONP
+            // this is added via a nuget package WebApiContrib.Formatting.Jsonp
+            //var formatter = new JsonpMediaTypeFormatter(jsonFormater, "cb");
+            //config.Formatters.Insert(0, formatter);
+
+            // Force HTTPS on antire API
+            //#if !DEBUG
+            //config.Filters.Add(new RequireHttpsAttribute());
+            //#endif
 
         }
     }
