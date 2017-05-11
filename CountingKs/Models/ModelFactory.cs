@@ -122,6 +122,14 @@ namespace CountingKs.Models
                 return null;
             }
         }
+        public AuthTokenModel Create(AuthToken authToken)
+        {
+            return new AuthTokenModel
+            {
+                Token = authToken.Token,
+                Expiration = authToken.Expiration
+            };
+        }
 
     }
 }
