@@ -1,4 +1,7 @@
-﻿using System;
+﻿#if DEBUG
+#define DISABLE_SECURITY
+#endif
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -29,6 +32,7 @@ namespace CountingKs.Filters
 
         public override void OnAuthorization(HttpActionContext actionContext)
         {
+#if !DISABLE_SECURITY
 
             const string APIKEYNAME = "apikey";
             const string TOKENNAME = "token";
@@ -94,6 +98,7 @@ namespace CountingKs.Filters
             }
 
             HandleUnauthorized(actionContext);
+#endif
         }
 
         void HandleUnauthorized(HttpActionContext actionContext)
