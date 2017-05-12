@@ -1,8 +1,12 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Linq;
 using System.Net.Http.Formatting;
+using System.Net.Http.Headers;
 using System.Web.Http;
+using System.Web.Http.Dispatcher;
 using CountingKs.Filters;
+using CountingKs.Services;
 using Newtonsoft.Json.Serialization;
 using WebApiContrib.Formatting.Jsonp;
 
@@ -38,30 +42,52 @@ namespace CountingKs
                 defaults: new { controller = "diarysummary" }
             );
             config.Routes.MapHttpRoute(
-                name: "Token",
+                name: "Tokens",
                 routeTemplate: "api/token",
                 defaults: new { controller = "token" }
             );
+
             // Uncomment the following line of code to enable query support for actions with an IQueryable or IQueryable<T> return type.
             // To avoid processing unexpected or malicious queries, use the validation settings on QueryableAttribute to validate incoming queries.
             // For more information, visit http://go.microsoft.com/fwlink/?LinkId=279712.
             //config.EnableQuerySupport();
 
-            //allow camel casing in the response objects
-            var jsonFormater = config.Formatters.OfType<JsonMediaTypeFormatter>().FirstOrDefault();
-            if (jsonFormater != null)
-                jsonFormater.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            var jsonFormatter = config.Formatters.OfType<JsonMediaTypeFormatter>().FirstOrDefault();
+            jsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            CreateMediaTypes(jsonFormatter);
 
-            // Add support for JSONP
-            // this is added via a nuget package WebApiContrib.Formatting.Jsonp
-            //var formatter = new JsonpMediaTypeFormatter(jsonFormater, "cb");
-            //config.Formatters.Insert(0, formatter);
+            // Add support JSONP
+            var formatter = new JsonpMediaTypeFormatter(jsonFormatter, "cb");
+            config.Formatters.Insert(0, formatter);
 
-            // Force HTTPS on antire API
+            // Replace the Controller Configuration
+            config.Services.Replace(typeof(IHttpControllerSelector),
+                new CountingKsControllerSelector(config));
+
+            //disable for now 
             //#if !DEBUG
-            //config.Filters.Add(new RequireHttpsAttribute());
+            //// Force HTTPS on entire API
+            //      config.Filters.Add(new RequireHttpsAttribute());
             //#endif
 
+
+
         }
+        private static void CreateMediaTypes(JsonMediaTypeFormatter jsonFormatter)
+        {
+            var mediaTypes = new string[]
+            {
+                "application/vnd.countingks.food.v1+json",
+                "application/vnd.countingks.measure.v1+json",
+                "application/vnd.countingks.measure.v2+json",
+                "application/vnd.countingks.diary.v1+json",
+                "application/vnd.countingks.diaryEntry.v1+json",
+            };
+            foreach (var mediaType in mediaTypes)
+            {
+                jsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue(mediaType));
+            }
+        }
+
     }
 }
